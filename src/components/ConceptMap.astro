@@ -1,0 +1,21 @@
+---
+/**
+ * Fixed-position SVG concept map. Coordinates come from the data module
+ * (viewBox 1200x800); nodes are keyboard-focusable buttons.
+ * The inner markup is shared with the client script so a level switch can
+ * replace every node and edge without duplicating the layout logic.
+ */
+import { renderMapMarkup } from '../lib/mapMarkup.js';
+
+const { concepts, viewbox, ariaLabel } = Astro.props;
+const markup = renderMapMarkup(concepts);
+---
+
+<svg
+  class="concept-map"
+  viewBox={`0 0 ${viewbox.width} ${viewbox.height}`}
+  role="group"
+  aria-label={ariaLabel}
+>
+  <Fragment set:html={markup} />
+</svg>

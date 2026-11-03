@@ -1,0 +1,129 @@
+---
+/**
+ * Quiz modal shell. Questions are server-rendered so they exist in the HTML;
+ * the client script controls views, scoring and localStorage. Opening any
+ * other overlay closes this dialog, matching the panel/drawer behavior.
+ */
+import { quizQuestions } from '../data/quiz.js';
+import { getConcept } from '../data/concepts.js';
+
+const total = quizQuestions.length;
+
+const conceptLabel = (conceptId) => {
+  const concept = getConcept(conceptId);
+  return concept?.mapLabel?.join(' ') || concept?.title || conceptId;
+};
+---
+
+<section
+  class="quiz"
+  id="quiz-dialog"
+  data-storage-key="quiz:best"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Quiz del curso"
+  tabindex="-1"
+  hidden
+>
+  <header class="quiz-header">
+    <button
+      class="quiz-close"
+      type="button"
+      data-close-quiz
+      aria-label="Cerrar el quiz"
+    >
+      ✕
+    </button>
+  </header>
+
+  <div class="quiz-body">
+    <div class="quiz-view" data-quiz-view="intro">
+      <p class="quiz-kicker">Quiz</p>
+      <h2 class="quiz-title">¿Cuánto quedó del recorrido?</h2>
+      <p class="quiz-pitch">
+        {`${total} preguntas para comprobar qué conceptos ya forman parte de su mapa mental.`}
+      </p>
+      <p class="quiz-meta">{`${total} preguntas · sin nota, sin presión`}</p>
+      <button class="quiz-primary" type="button" data-quiz-start>
+        Comenzar
+      </button>
+    </div>
+
+    <div class="quiz-view" data-quiz-view="question" hidden>
+      <p class="quiz-progress-label" data-quiz-progress>
+        Pregunta 1 de {total}
+      </p>
+      <div
+        class="quiz-progress"
+        role="progressbar"
+        aria-label="Progreso del quiz"
+        aria-valuemin="0"
+        aria-valuemax={total}
+        aria-valuenow="1"
+      >
+        <span class="quiz-progress-fill" data-quiz-progress-fill></span>
+      </div>
+
+      {
+        quizQuestions.map((question, index) => (
+          <div class="quiz-question" data-quiz-question={index} hidden>
+            <h3 class="quiz-question-prompt" id={`quiz-prompt-${index}`}>
+              {question.prompt}
+            </h3>
+            <div
+              class="quiz-options"
+              role="group"
+              aria-labelledby={`quiz-prompt-${index}`}
+            >
+              {question.options.map((option, optionIndex) => (
+                <button
+                  class="quiz-option"
+                  type="button"
+                  data-quiz-option={optionIndex}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <div class="quiz-feedback" data-quiz-feedback hidden>
+              <p class="quiz-explanation">{question.explanation}</p>
+              <button
+                class="quiz-chip"
+                type="button"
+                data-quiz-concept={question.conceptId}
+              >
+                {`Ver concepto: ${conceptLabel(question.conceptId)}`}
+              </button>
+            </div>
+            <button
+              class="quiz-primary"
+              type="button"
+              data-quiz-next
+              hidden
+            >
+              {index === total - 1 ? 'Ver resultado' : 'Siguiente'}
+            </button>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="quiz-view" data-quiz-view="results" hidden>
+      <h2 class="quiz-title">Resultado</h2>
+      <p class="quiz-score" data-quiz-score>{`0/${total}`}</p>
+      <p class="quiz-tier" data-quiz-tier></p>
+      <p class="quiz-best" data-quiz-best hidden></p>
+      <p class="quiz-best-new" data-quiz-best-new hidden>Nuevo mejor resultado</p>
+      <div class="quiz-results-actions">
+        <button class="quiz-primary" type="button" data-quiz-restart>
+          Repetir quiz
+        </button>
+        <button class="quiz-secondary" type="button" data-close-quiz>
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+    <p class="quiz-live" data-quiz-live role="status" aria-live="polite"></p>
+  </div>
+</section>

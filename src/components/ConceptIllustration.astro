@@ -1,0 +1,1324 @@
+---
+/**
+ * Inline SVG illustrations for published concepts (one per concept id).
+ * Line-art style: thin strokes, every color resolved from theme CSS
+ * variables so the same artwork works in dark and light themes.
+ * Idle animations are disabled under prefers-reduced-motion in main.css.
+ * Coming-soon concepts render nothing.
+ * Marker ids are prefixed per scene: this file renders into one document.
+ */
+const { conceptId } = Astro.props;
+---
+
+{
+  conceptId === 'por-que-un-agente' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 200"
+      role="img"
+      aria-label="Ilustración: a la izquierda, un chat que solo responde con texto; a la derecha, un agente en su escritorio que termina la tarea con archivos, terminal y engranajes."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-chat-ask"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+        <marker
+          id="arr-chat-reply"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)" />
+        </marker>
+        <marker
+          id="arr-divider"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="7"
+          markerHeight="7"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--text)" />
+        </marker>
+      </defs>
+
+      {/* Left scene: chat question-and-answer loop (ChatGPT) */}
+      <circle cx="30" cy="64" r="8" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <path d="M16 96 Q30 76 44 96" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="round" />
+      <rect x="58" y="38" width="74" height="30" rx="10" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <text x="95" y="60" text-anchor="middle" font-size="14" fill="var(--accent)">¿…?</text>
+      <path class="ill-flow" d="M42 61 L54 56" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-chat-ask)" />
+      <rect x="58" y="84" width="74" height="40" rx="10" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" />
+      <path d="M68 96 h48 M68 104 h38 M68 112 h26" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <path class="ill-flow" d="M56 104 L46 88" fill="none" stroke="var(--accent-2)" stroke-width="1.8" marker-end="url(#arr-chat-reply)" />
+      <text x="95" y="146" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)">ChatGPT</text>
+
+      {/* Divider arrow */}
+      <path class="ill-flow" d="M150 92 L184 92" fill="none" stroke="var(--text)" stroke-width="2" marker-end="url(#arr-divider)" />
+
+      {/* Right scene: agent at a desk completing the task */}
+      <g class="ill-scene-agent">
+        <line x1="200" y1="120" x2="330" y2="120" stroke="var(--text)" stroke-width="2" stroke-linecap="round" />
+        <path d="M206 120 v22 M324 120 v22" stroke="var(--node-stroke)" stroke-width="1.5" fill="none" />
+        <rect class="ill-glowline" x="272" y="86" width="56" height="34" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+        <text class="ill-mono" x="300" y="108" text-anchor="middle" font-size="12" fill="var(--accent)">>_</text>
+        <circle cx="316" cy="64" r="8" fill="none" stroke="var(--text)" stroke-width="1.7" />
+        <circle cx="316" cy="64" r="11" fill="none" stroke="var(--text)" stroke-width="1.4" stroke-dasharray="2.6 3.2" />
+        <circle cx="302" cy="79" r="5" fill="none" stroke="var(--text)" stroke-width="1.5" />
+        <circle cx="302" cy="79" r="7" fill="none" stroke="var(--text)" stroke-width="1.3" stroke-dasharray="2.2 2.8" />
+        <circle cx="226" cy="66" r="8" fill="none" stroke="var(--text)" stroke-width="1.8" />
+        <path d="M214 118 Q226 78 238 118" fill="none" stroke="var(--text)" stroke-width="1.8" />
+        <path d="M238 96 L254 100" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-linecap="round" />
+        <rect x="252" y="86" width="18" height="24" rx="3" fill="none" stroke="var(--accent-2)" stroke-width="1.8" />
+        <circle cx="256" cy="66" r="8" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+        <path d="M252 66 l3 3 6 -7" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <text x="265" y="146" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)">Agente</text>
+      </g>
+
+      <text x="170" y="178" text-anchor="middle" font-size="10.5" fill="var(--muted)">Cambio aplicado, no solo explicado.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'motor-llm' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: el motor del LLM alimenta la ventana de contexto; los tokens que entran se marcan con una marca de verificación y los que no caben salen del borde y sobran."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-pipe"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+        <marker
+          id="arr-sobra"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
+        </marker>
+      </defs>
+
+      {/* Engine: chip and gears (the LLM) */}
+      <rect x="14" y="56" width="78" height="76" rx="12" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <rect x="30" y="68" width="22" height="16" rx="3" fill="none" stroke="var(--text)" stroke-width="1.5" />
+      <path d="M30 72 h-5 M30 77 h-5 M30 82 h-5 M52 72 h5 M52 77 h5 M52 82 h5" stroke="var(--muted)" stroke-width="1.4" fill="none" />
+      <circle cx="52" cy="106" r="10" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <circle cx="52" cy="106" r="13" fill="none" stroke="var(--text)" stroke-width="1.4" stroke-dasharray="2.6 3.4" />
+      <circle cx="72" cy="122" r="6" fill="none" stroke="var(--text)" stroke-width="1.5" />
+      <circle cx="72" cy="122" r="8" fill="none" stroke="var(--text)" stroke-width="1.3" stroke-dasharray="2.2 3" />
+      <text x="53" y="152" text-anchor="middle" font-size="11" font-weight="600" fill="var(--muted)">LLM</text>
+
+      {/* Feed pipe into the context window */}
+      <path class="ill-flow" d="M94 94 L124 94" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#arr-pipe)" />
+      <circle cx="108" cy="114" r="7" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M104.5 114 l2.5 2.5 4.5 -5" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="108" y="132" text-anchor="middle" font-size="10.5" fill="var(--accent)">entra</text>
+
+      {/* Context window with token blocks inside */}
+      <rect class="ill-glowline" x="132" y="26" width="148" height="124" rx="10" fill="none" stroke="var(--accent)" stroke-width="2" />
+      <path d="M132 48 H280" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" fill="none" />
+      <circle cx="142" cy="37" r="2.4" fill="var(--muted)" />
+      <circle cx="152" cy="37" r="2.4" fill="var(--muted)" />
+      <circle cx="162" cy="37" r="2.4" fill="var(--muted)" />
+      <g fill="none" stroke="var(--text)" stroke-width="1.5">
+        <rect x="140" y="56" width="34" height="14" rx="3" />
+        <rect x="178" y="56" width="24" height="14" rx="3" />
+        <rect x="206" y="56" width="44" height="14" rx="3" />
+        <rect x="254" y="56" width="20" height="14" rx="3" />
+        <rect x="140" y="78" width="22" height="14" rx="3" />
+        <rect x="166" y="78" width="38" height="14" rx="3" />
+        <rect x="208" y="78" width="30" height="14" rx="3" />
+        <rect x="242" y="78" width="16" height="14" rx="3" />
+        <rect x="140" y="100" width="52" height="14" rx="3" />
+        <rect x="196" y="100" width="32" height="14" rx="3" />
+      </g>
+
+      {/* Tokens that do not fit fall out of the right edge */}
+      <path d="M281 101 L292 96" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arr-sobra)" />
+      <g class="ill-fall" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3">
+        <rect x="298" y="78" width="16" height="11" rx="3" />
+        <rect x="304" y="96" width="16" height="11" rx="3" />
+        <rect x="296" y="114" width="16" height="11" rx="3" />
+      </g>
+      <text x="306" y="142" text-anchor="middle" font-size="10.5" fill="var(--muted)">sobra</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'estructura-proyecto' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: árbol ordenado de carpetas del proyecto con la carpeta raíz, tres carpetas etiquetadas y el archivo AGENTS.md fijado en la raíz como nota recordatoria."
+      focusable="false"
+    >
+      {/* Root folder */}
+      <rect x="16" y="16" width="114" height="30" rx="8" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <text class="ill-mono" x="73" y="36" text-anchor="middle" font-size="11" fill="var(--text)">mi-proyecto/</text>
+
+      {/* Branches */}
+      <path d="M58 46 V146 M58 74 H80 M58 110 H80 M58 146 H80" fill="none" stroke="var(--text)" stroke-width="1.5" />
+
+      {/* Folder: src */}
+      <rect x="80" y="58" width="20" height="9" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="80" y="64" width="48" height="20" rx="4" fill="var(--surface)" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <text x="136" y="80" text-anchor="start" font-size="11" fill="var(--text)">src</text>
+
+      {/* Folder: tests */}
+      <rect x="80" y="94" width="20" height="9" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="80" y="100" width="48" height="20" rx="4" fill="var(--surface)" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <text x="136" y="116" text-anchor="start" font-size="11" fill="var(--text)">tests</text>
+
+      {/* Folder: docs */}
+      <rect x="80" y="130" width="20" height="9" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="80" y="136" width="48" height="20" rx="4" fill="var(--surface)" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <text x="136" y="152" text-anchor="start" font-size="11" fill="var(--text)">docs</text>
+
+      {/* Pinned AGENTS.md note at the root */}
+      <path d="M132 31 H194" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4" />
+      <rect class="ill-glow" x="196" y="10" width="100" height="50" rx="8" fill="var(--accent-glow)" />
+      <rect class="ill-glowline" x="200" y="14" width="92" height="42" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <circle cx="246" cy="8" r="3.5" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M246 11.5 V14" stroke="var(--accent)" stroke-width="1.8" />
+      <text class="ill-mono" x="246" y="32" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--accent)">AGENTS.md</text>
+      <path d="M210 40 h56 M210 46 h40" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+    </svg>
+  )
+}
+
+{
+  conceptId === 'git-con-ia' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una cadena de puntos de guardado (commits) con una rama de experimento, una lupa que revisa la zona de cambios y un escudo que marca el control antes de aceptar."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-git-end"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Main commit chain, left to right */}
+      <path d="M18 100 H296" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path class="ill-flow" d="M296 100 L326 100" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-git-end)" />
+
+      {/* Commit snapshots; the third one is highlighted */}
+      <rect x="22" y="92" width="26" height="16" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="64" y="92" width="26" height="16" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect class="ill-glowline" x="106" y="92" width="26" height="16" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <rect x="148" y="92" width="26" height="16" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+
+      {/* Branch for the experiment, dashed */}
+      <path d="M150 92 C160 72 172 66 190 66" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" stroke-dasharray="4 4" />
+      <rect x="190" y="58" width="26" height="16" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" stroke-dasharray="4 3" />
+      <path d="M216 66 C238 66 252 88 262 100" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" stroke-dasharray="4 4" />
+
+      {/* Diff zone the magnifier inspects */}
+      <rect x="94" y="28" width="46" height="26" rx="4" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path d="M100 37 h22" fill="none" stroke="var(--muted)" stroke-width="1.6" />
+      <path d="M100 44 h30" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <circle cx="122" cy="70" r="10" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M129 77 L136 84" fill="none" stroke="var(--text)" stroke-width="1.7" stroke-linecap="round" />
+
+      {/* Shield gate at the merge point: revise before accepting */}
+      <path
+        d="M281 94 l14 5 v9 c0 8-14 13-14 13 c0 0-14-5-14-13 v-9 z"
+        fill="none"
+        stroke="var(--accent)"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+      <path d="M275 109 l4 4 8 -9" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+      <text x="170" y="178" text-anchor="middle" font-size="10.5" fill="var(--muted)">Cada cambio, un punto de guardado.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'caparazon-agente' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: el agente en el centro, rodeado de un archivo de instrucciones AGENTS.md, tarjetas de skills, un control automático de hooks y un enchufe MCP que conecta herramientas externas."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-hook-in"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
+        </marker>
+        <marker
+          id="arr-hook-out"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Center: the agent, softly beaming */}
+      <circle cx="170" cy="100" r="36" fill="none" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="3 5" opacity="0.6" />
+      <circle cx="170" cy="82" r="9" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <path d="M150 130 Q170 94 190 130" fill="none" stroke="var(--text)" stroke-width="1.8" />
+
+      {/* Connectors from the four cards to the agent */}
+      <g fill="none" stroke="var(--muted)" stroke-width="1.1" stroke-dasharray="3 5" opacity="0.8">
+        <path d="M110 62 L146 88" />
+        <path d="M228 62 L194 88" />
+        <path d="M112 142 L146 114" />
+        <path d="M230 142 L194 114" />
+      </g>
+
+      {/* AGENTS.md: pinned note (permanent instructions) */}
+      <rect class="ill-glow" x="14" y="14" width="96" height="48" rx="8" fill="var(--accent-glow)" />
+      <rect class="ill-glowline" x="18" y="18" width="88" height="40" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <circle cx="62" cy="12" r="3.4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M62 15.5 V18" stroke="var(--accent)" stroke-width="1.8" />
+      <text class="ill-mono" x="62" y="35" text-anchor="middle" font-size="10" font-weight="600" fill="var(--accent)">AGENTS.md</text>
+      <path d="M27 43 h66 M27 49 h44" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* Skills: reusable recipe cards */}
+      <rect x="236" y="16" width="78" height="38" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+      <rect x="228" y="24" width="78" height="38" rx="6" fill="var(--surface)" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <path d="M236 40 h54 M236 48 h40 M236 56 h48" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* Hooks: automatic control on events */}
+      <rect x="12" y="126" width="100" height="44" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path class="ill-flow" d="M18 148 L32 148" fill="none" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#arr-hook-in)" />
+      <circle cx="56" cy="148" r="9" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M52 148 l2.5 2.5 5 -5.5" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path class="ill-flow" d="M68 148 L84 148" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#arr-hook-out)" />
+      <rect x="90" y="140" width="16" height="16" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+
+      {/* MCPs: one standard plug into external sockets */}
+      <rect class="ill-glowline" x="232" y="140" width="28" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M226 144 h6 M226 152 h6" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M260 148 L278 138 M260 148 L282 148 M260 148 L278 160" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 4" />
+      <circle cx="284" cy="136" r="4.5" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <circle cx="290" cy="148" r="4.5" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <circle cx="284" cy="162" r="4.5" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <text x="306" y="152" font-size="10.5" font-weight="600" fill="var(--accent)">MCPs</text>
+
+      <text x="170" y="182" text-anchor="middle" font-size="10.5" fill="var(--muted)">Instrucciones, recetas, controles y conectores.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'ecosistema-ia' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: a la izquierda un archivador con una tarjeta abierta que fluye hacia el agente del centro como memoria (engram); a la derecha, la salida del agente pasa una compuerta de control con un escudo de verificación y una lupa (revisión) antes de salir aprobada."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-eco-in"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+        <marker
+          id="arr-eco-out"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)" />
+        </marker>
+      </defs>
+
+      {/* Left: archiver cabinet with a glowing index card of decisions */}
+      <rect x="20" y="64" width="76" height="30" rx="4" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="20" y="104" width="76" height="30" rx="4" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path d="M34 79 h12 M34 119 h12" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <rect class="ill-glow" x="30" y="26" width="68" height="50" rx="6" fill="var(--accent-glow)" />
+      <rect class="ill-glowline" x="36" y="32" width="60" height="40" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M44 42 h44 M44 50 h30 M44 58 h36" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* Memory flows from the card into the agent */}
+      <path class="ill-flow" d="M100 70 L142 90" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-eco-in)" />
+
+      {/* Center: the agent, softly beaming */}
+      <circle cx="170" cy="98" r="34" fill="none" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="3 5" opacity="0.6" />
+      <circle cx="170" cy="80" r="9" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <path d="M150 128 Q170 92 190 128" fill="none" stroke="var(--text)" stroke-width="1.8" />
+
+      {/* The agent's output heads to the review gate */}
+      <path class="ill-flow" d="M204 108 L236 108" fill="none" stroke="var(--text)" stroke-width="1.8" marker-end="url(#arr-eco-out)" />
+
+      {/* Right: checkpoint gate with shield check and a magnifier */}
+      <rect class="ill-glowline" x="244" y="88" width="32" height="42" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M253 109 l5 5 9 -10" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="286" cy="74" r="7" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M291 79 L297 85" fill="none" stroke="var(--text)" stroke-width="1.7" stroke-linecap="round" />
+
+      {/* Only what passes the gate exits, approved */}
+      <path class="ill-flow" d="M278 108 L322 108" fill="none" stroke="var(--accent-2)" stroke-width="1.8" marker-end="url(#arr-eco-out)" />
+
+      <text x="58" y="152" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">engram</text>
+      <text x="260" y="152" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">review</text>
+
+      <text x="170" y="178" text-anchor="middle" font-size="10.5" fill="var(--muted)">Recuerda lo importante; sale solo lo verificado.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'pruebas-con-ia' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una cinta lleva cambios hacia una compuerta de control con una marca de verificación; los que pasan siguen y el que falla se desvía a un camino de reintento."
+      focusable="false"
+    >
+      {/* Conveyor belt with incoming changes */}
+      <path class="ill-flow" d="M16 100 H108" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect class="ill-fall" x="20" y="92" width="16" height="16" rx="3" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <rect x="58" y="92" width="16" height="16" rx="3" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <rect x="94" y="92" width="16" height="16" rx="3" fill="none" stroke="var(--text)" stroke-width="1.6" />
+
+      {/* Checkpoint gate */}
+      <rect class="ill-glowline" x="116" y="78" width="34" height="44" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M126 100 l5 5 10 -11" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* Passed path: the changes that survive the check */}
+      <path d="M152 100 H232" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="166" y="92" width="16" height="16" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M170 100 l2.5 2.5 5 -5.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="200" y="92" width="16" height="16" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M204 100 l2.5 2.5 5 -5.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* Rejected path: the change that fails comes back */}
+      <path d="M133 124 C152 156 196 160 228 146" fill="none" stroke="var(--soon)" stroke-width="1.4" stroke-dasharray="4 4" />
+      <rect x="232" y="138" width="16" height="16" rx="3" fill="none" stroke="var(--soon)" stroke-width="1.6" />
+      <path d="M237 142 l7 8 M244 142 l-7 8" fill="none" stroke="var(--soon)" stroke-width="1.6" stroke-linecap="round" />
+
+      <text x="170" y="178" text-anchor="middle" font-size="10.5" fill="var(--muted)">Verde pasa; lo que falla, vuelve.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'produccion' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: a la izquierda, leer el repositorio entero drena la batería de tokens con tres flechas; a la derecha, leer un solo archivo enfocado la mantiene llena."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-prod-drain"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
+        </marker>
+        <marker
+          id="arr-prod-beam"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Left: reading the whole repository drains the battery */}
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.5">
+        <rect x="26" y="30" width="22" height="26" rx="3" />
+        <rect x="26" y="68" width="22" height="26" rx="3" />
+        <rect x="26" y="106" width="22" height="26" rx="3" />
+      </g>
+      <path d="M32 40 h10 M32 78 h10 M32 116 h10" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+      <path class="ill-flow" d="M50 44 L110 84" fill="none" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 5" marker-end="url(#arr-prod-drain)" />
+      <path class="ill-flow" d="M50 80 L110 90" fill="none" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 5" marker-end="url(#arr-prod-drain)" />
+      <path class="ill-flow" d="M50 118 L110 96" fill="none" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 5" marker-end="url(#arr-prod-drain)" />
+      <rect x="118" y="56" width="36" height="66" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.7" />
+      <rect x="129" y="48" width="14" height="8" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="123" y="106" width="26" height="10" rx="2" fill="var(--soon)" />
+
+      {/* Divider */}
+      <path d="M176 26 V164" fill="none" stroke="var(--border)" stroke-width="1.4" stroke-dasharray="4 6" />
+
+      {/* Right: one focused file keeps the battery full */}
+      <rect class="ill-glowline" x="196" y="62" width="26" height="34" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M202 72 h14 M202 80 h12 M202 88 h10" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+      <path class="ill-flow" d="M226 84 L286 84" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-prod-beam)" />
+      <rect x="292" y="56" width="36" height="66" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.7" />
+      <rect x="303" y="48" width="14" height="8" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="297" y="64" width="26" height="50" rx="2" fill="var(--accent)" opacity="0.85" />
+
+      <text x="170" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">Solo los archivos que hacen falta.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'harness' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un bloque de motor dentro de un chasis con rueda, palanca y tablero; desde el chasis salen flechas hacia una carpeta de proyecto y una ventana de terminal."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-harness-out"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Chassis with the engine inside */}
+      <rect x="18" y="58" width="152" height="74" rx="12" fill="none" stroke="var(--text)" stroke-width="2" />
+      <rect class="ill-glowline" x="44" y="72" width="72" height="44" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M58 72 v-8 h10 v8 M86 72 v-8 h10 v8" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <circle cx="66" cy="94" r="8" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <circle cx="94" cy="94" r="8" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <path d="M66 94 h28" fill="none" stroke="var(--muted)" stroke-width="1.4" />
+      <text x="80" y="151" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">motor</text>
+
+      {/* Wheel, lever and dashboard gauge */}
+      <circle cx="38" cy="146" r="14" fill="none" stroke="var(--text)" stroke-width="1.8" />
+      <circle cx="38" cy="146" r="5" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path d="M124 72 L138 46" fill="none" stroke="var(--text)" stroke-width="1.7" stroke-linecap="round" />
+      <circle cx="140" cy="43" r="5" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <circle cx="148" cy="92" r="12" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M148 92 L155 85" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" />
+
+      {/* Outputs: project folder and terminal */}
+      <path class="ill-flow" d="M174 80 L210 70" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-harness-out)" />
+      <path class="ill-flow" d="M174 112 L210 128" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-harness-out)" />
+
+      <rect x="214" y="56" width="18" height="8" rx="2" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <rect x="214" y="62" width="48" height="26" rx="4" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <text x="238" y="102" text-anchor="middle" font-size="10.5" fill="var(--muted)">proyecto</text>
+
+      <rect x="214" y="116" width="64" height="38" rx="5" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <path d="M222 126 l6 5 -6 5" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M234 136 h14" fill="none" stroke="var(--muted)" stroke-width="1.5" />
+      <text x="246" y="172" text-anchor="middle" font-size="10.5" fill="var(--muted)">terminal</text>
+
+      <text x="170" y="186" text-anchor="middle" font-size="10.5" fill="var(--muted)">El chasis conecta motor, proyecto y terminal.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'loop-agentico' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un bucle circular con tres estaciones —piensa, actúa y observa— y una flecha de salida que termina en una marca de verificación con el texto objetivo cumplido."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-loop-cycle"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+        <marker
+          id="arr-loop-exit"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)" />
+        </marker>
+      </defs>
+
+      {/* The loop itself */}
+      <circle cx="140" cy="95" r="60" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" stroke-dasharray="6 6" />
+      <path class="ill-flow" d="M182 53 A60 60 0 0 1 200 95" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-loop-cycle)" />
+      <path class="ill-flow" d="M182 137 A60 60 0 0 1 140 155" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-loop-cycle)" />
+      <path class="ill-flow" d="M98 137 A60 60 0 0 1 80 95" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-loop-cycle)" />
+      <path class="ill-flow" d="M98 53 A60 60 0 0 1 140 35" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-loop-cycle)" />
+
+      {/* Station: think (top) */}
+      <circle cx="140" cy="35" r="8" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M136 43 v5 h8 v-5 M140 48 v6" fill="none" stroke="var(--text)" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M128 29 l-4 -4 M152 29 l4 -4 M128 41 l-4 4 M152 41 l4 4" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round" />
+      <text x="140" y="16" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">piensa</text>
+
+      {/* Station: observe (bottom-left) */}
+      <path d="M98 131 q-12 7 0 14 q12 -7 0 -14 z" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <circle cx="98" cy="138" r="3" fill="var(--text)" />
+      <text x="58" y="168" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">observa</text>
+
+      {/* Station: act (bottom-right) */}
+      <circle cx="182" cy="138" r="8" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M182 128 v-4 M182 148 v4 M172 138 h-4 M192 138 h4 M175 131 l-3 -3 M189 145 l3 3 M189 131 l3 -3 M175 145 l-3 3" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" stroke-linecap="round" />
+      <text x="224" y="168" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">actúa</text>
+
+      {/* Exit: goal met */}
+      <path class="ill-flow" d="M202 95 L254 95" fill="none" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#arr-loop-exit)" />
+      <circle cx="282" cy="95" r="13" fill="none" stroke="var(--accent-2)" stroke-width="1.8" />
+      <path d="M275 95 l5 5 10 -11" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="282" y="124" text-anchor="middle" font-size="10.5" fill="var(--muted)">objetivo cumplido</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'cache' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: dos bandejas apiladas con bloques de tokens idénticos marcados una sola vez; una flecha de retorno los reutiliza y una moneda tachada indica que no se paga dos veces."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-cache-return"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Top tray with token blocks */}
+      <rect x="24" y="34" width="168" height="48" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <g fill="none" stroke="var(--text)" stroke-width="1.4">
+        <rect x="38" y="46" width="28" height="12" rx="2" />
+        <rect x="114" y="46" width="24" height="12" rx="2" />
+        <rect x="144" y="46" width="40" height="12" rx="2" />
+        <rect x="38" y="64" width="40" height="10" rx="2" />
+        <rect x="84" y="64" width="30" height="10" rx="2" />
+      </g>
+      <rect class="ill-glowline" x="72" y="46" width="36" height="12" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M80 52 l2.5 2.5 5 -5.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* Bottom tray with the same marked block */}
+      <rect x="24" y="104" width="168" height="48" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <g fill="none" stroke="var(--text)" stroke-width="1.4">
+        <rect x="38" y="116" width="24" height="12" rx="2" />
+        <rect x="104" y="116" width="34" height="12" rx="2" />
+        <rect x="144" y="116" width="38" height="12" rx="2" />
+        <rect x="38" y="134" width="34" height="10" rx="2" />
+        <rect x="78" y="134" width="38" height="10" rx="2" />
+      </g>
+      <rect class="ill-glowline" x="66" y="116" width="36" height="12" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M74 122 l2.5 2.5 5 -5.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* Reuse arrow from the bottom copy back to the top copy */}
+      <path class="ill-flow" d="M64 112 C16 94 16 62 62 52" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-cache-return)" />
+
+      {/* The coin not paid twice */}
+      <circle cx="270" cy="78" r="24" fill="none" stroke="var(--accent-2)" stroke-width="1.8" />
+      <text x="270" y="86" text-anchor="middle" font-size="18" font-weight="700" fill="var(--accent-2)">$</text>
+      <path d="M246 54 L294 102" fill="none" stroke="var(--soon)" stroke-width="2.2" stroke-linecap="round" />
+      <text x="270" y="122" text-anchor="middle" font-size="10.5" fill="var(--muted)">no se paga</text>
+      <text x="270" y="136" text-anchor="middle" font-size="10.5" fill="var(--muted)">dos veces</text>
+
+      <text x="108" y="178" text-anchor="middle" font-size="10.5" fill="var(--muted)">Bloques idénticos, una sola lectura.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'claude-code' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una ventana de terminal con el cursor de la línea de comandos, una nota fijada con CLAUDE.md, un escudo de permisos y un enchufe MCP."
+      focusable="false"
+    >
+      {/* Terminal window */}
+      <rect class="ill-glowline" x="24" y="44" width="176" height="110" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M24 66 H200" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" />
+      <circle cx="36" cy="55" r="2.4" fill="var(--muted)" />
+      <circle cx="46" cy="55" r="2.4" fill="var(--muted)" />
+      <circle cx="56" cy="55" r="2.4" fill="var(--muted)" />
+      <text class="ill-mono" x="42" y="90" font-size="12" fill="var(--accent)">&gt;_</text>
+      <path d="M42 104 h78 M42 116 h110 M42 128 h64" fill="none" stroke="var(--muted)" stroke-width="1.4" />
+      <rect x="110" y="123" width="2" height="10" fill="var(--accent)" />
+
+      {/* Pinned CLAUDE.md note */}
+      <rect class="ill-glow" x="222" y="18" width="98" height="50" rx="6" fill="var(--accent-glow)" />
+      <rect class="ill-glowline" x="226" y="22" width="90" height="42" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <circle cx="271" cy="16" r="3.4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M271 19.5 V22" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <text class="ill-mono" x="271" y="40" text-anchor="middle" font-size="10" font-weight="600" fill="var(--accent)">CLAUDE.md</text>
+      <path d="M236 48 h70 M236 55 h48" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* Permissions shield */}
+      <path d="M244 132 l14 5 v8 c0 8 -14 14 -14 14 c0 0 -14 -6 -14 -14 v-8 z" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linejoin="round" />
+      <path d="M238 148 l4 4 8 -9" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="244" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">permisos</text>
+
+      {/* MCP plug */}
+      <rect x="292" y="94" width="26" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M286 98 h6 M286 106 h6" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M292 102 L260 102" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 4" />
+      <text x="305" y="126" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--accent)">MCP</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'codex' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una ventana de terminal dentro de una caja de aislamiento con rejilla, alimentada desde una nube que envía la tarea."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-codex-down"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)" />
+        </marker>
+      </defs>
+
+      {/* Sandbox box with a light grid */}
+      <g fill="none" stroke="var(--border)" stroke-width="1" opacity="0.8">
+        <path d="M34 82 H240 M34 112 H240 M34 142 H240 M84 52 V170 M134 52 V170 M184 52 V170" />
+      </g>
+      <rect x="34" y="52" width="206" height="118" rx="10" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" stroke-dasharray="7 5" />
+
+      {/* Terminal inside the sandbox */}
+      <rect x="58" y="72" width="146" height="78" rx="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.7" />
+      <path d="M58 90 H204" fill="none" stroke="var(--accent)" stroke-width="1.1" opacity="0.7" />
+      <circle cx="68" cy="81" r="2.2" fill="var(--muted)" />
+      <circle cx="77" cy="81" r="2.2" fill="var(--muted)" />
+      <circle cx="86" cy="81" r="2.2" fill="var(--muted)" />
+      <text class="ill-mono" x="70" y="108" font-size="12" fill="var(--accent)">&gt;_</text>
+      <path d="M70 120 h72 M70 132 h100" fill="none" stroke="var(--muted)" stroke-width="1.4" />
+
+      {/* Cloud feeding the sandbox */}
+      <path d="M252 52 q0 -12 12 -12 q2 -10 12 -10 q10 0 12 10 q12 0 12 12 q0 8 -10 8 h-28 q-10 0 -10 -8 z" fill="none" stroke="var(--accent-2)" stroke-width="1.7" />
+      <text x="280" y="22" text-anchor="middle" font-size="10.5" fill="var(--muted)">nube</text>
+      <path class="ill-flow" d="M276 62 L246 92" fill="none" stroke="var(--accent-2)" stroke-width="1.8" marker-end="url(#arr-codex-down)" />
+
+      <text x="120" y="184" text-anchor="middle" font-size="10.5" fill="var(--muted)">El trabajo corre aislado del sistema.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'opencode' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una ventana de terminal con tres cartuchos de motor intercambiables de distinto color, entre corchetes abiertos, para elegir modelo o proveedor."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-opencode-pick"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Terminal window */}
+      <rect class="ill-glowline" x="22" y="62" width="156" height="94" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M22 84 H178" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" />
+      <circle cx="34" cy="73" r="2.4" fill="var(--muted)" />
+      <circle cx="44" cy="73" r="2.4" fill="var(--muted)" />
+      <circle cx="54" cy="73" r="2.4" fill="var(--muted)" />
+      <text class="ill-mono" x="36" y="108" font-size="12" fill="var(--accent)">&gt;_</text>
+      <path d="M36 122 h64 M36 134 h92" fill="none" stroke="var(--muted)" stroke-width="1.4" />
+
+      {/* Open brackets around the interchangeable cartridges */}
+      <path d="M200 74 h-10 v68 h10" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M310 74 h10 v68 h-10" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+      <path class="ill-flow" d="M180 108 L208 108" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-opencode-pick)" />
+
+      {/* Three engine cartridges */}
+      <g fill="none" stroke-width="1.8">
+        <rect x="222" y="72" width="58" height="20" rx="4" stroke="var(--accent)" />
+        <rect x="222" y="102" width="58" height="20" rx="4" stroke="var(--accent-2)" />
+        <rect x="222" y="132" width="58" height="20" rx="4" stroke="var(--node-stroke)" />
+        <path d="M216 78 h6 M216 86 h6 M216 108 h6 M216 116 h6 M216 138 h6 M216 146 h6" stroke="var(--muted)" stroke-width="1.4" />
+      </g>
+      <text x="251" y="86" text-anchor="middle" font-size="10" fill="var(--accent)">1</text>
+      <text x="251" y="116" text-anchor="middle" font-size="10" fill="var(--accent-2)">2</text>
+      <text x="251" y="146" text-anchor="middle" font-size="10" fill="var(--muted)">3</text>
+
+      <text x="251" y="170" text-anchor="middle" font-size="10.5" fill="var(--muted)">proveedor</text>
+      <text x="100" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">mismo agente, distinto motor.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'vscode-extensiones' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un editor dividido muestra el diff entre antes y después; abajo, un botón de aceptar con una marca de verificación y un botón de rechazar con una cruz."
+      focusable="false"
+    >
+      {/* Editor split pane */}
+      <rect x="18" y="24" width="304" height="118" rx="8" fill="none" stroke="var(--node-stroke)" stroke-width="1.8" />
+      <path d="M170 24 V142" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <path d="M18 50 H322" fill="none" stroke="var(--border)" stroke-width="1.4" />
+      <text x="94" y="42" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">antes</text>
+      <text x="246" y="42" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--muted)">después</text>
+
+      {/* Left side: removed or kept lines */}
+      <path d="M34 68 h44" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" />
+      <path d="M34 82 h84" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M34 96 h60" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linecap="round" />
+      <path d="M34 110 h76" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M34 124 h48" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+
+      {/* Right side: added or kept lines */}
+      <path d="M184 68 h44" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+      <path d="M184 82 h84" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M184 96 h70" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+      <path d="M184 110 h76" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" />
+      <path d="M184 124 h52" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" />
+
+      {/* Accept / reject pair */}
+      <circle cx="230" cy="160" r="12" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M224 160 l4 4 8 -9" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="282" cy="160" r="12" fill="none" stroke="var(--soon)" stroke-width="1.8" />
+      <path d="M277 155 l10 10 M287 155 l-10 10" fill="none" stroke="var(--soon)" stroke-width="1.8" stroke-linecap="round" />
+      <text x="230" y="186" text-anchor="middle" font-size="10.5" fill="var(--muted)">aceptar</text>
+      <text x="282" y="186" text-anchor="middle" font-size="10.5" fill="var(--muted)">rechazar</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'ingenieria-contexto' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una carpeta con planos; solo las hojas relevantes salen de la carpeta y entran a la ventana de contexto, mientras el resto queda fuera, atenuado."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-ctx-in"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Dossier folder */}
+      <path d="M16 84 h34 l8 -10 h46 v12" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <rect x="16" y="84" width="104" height="70" rx="6" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.2">
+        <rect x="28" y="100" width="22" height="30" rx="2" />
+        <rect x="58" y="100" width="22" height="30" rx="2" />
+        <rect x="88" y="100" width="18" height="30" rx="2" />
+      </g>
+      <rect class="ill-glowline" x="42" y="94" width="26" height="34" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M48 104 h14 M48 110 h10" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* Only the relevant sheet travels to the context window */}
+      <path class="ill-flow" d="M126 108 C138 94 142 82 148 78" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-ctx-in)" />
+      <rect class="ill-glowline" x="150" y="56" width="30" height="38" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M157 68 h16 M157 76 h12 M157 84 h14" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+
+      {/* The rest stays outside, dimmed */}
+      <g fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.7">
+        <rect x="138" y="128" width="24" height="30" rx="2" />
+        <rect x="170" y="138" width="20" height="26" rx="2" />
+      </g>
+
+      {/* Context window */}
+      <path class="ill-flow" d="M182 76 L198 76" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-ctx-in)" />
+      <rect x="204" y="34" width="118" height="118" rx="6" fill="none" stroke="var(--text)" stroke-width="1.6" />
+      <path d="M204 56 H322" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" />
+      <circle cx="214" cy="45" r="2.2" fill="var(--muted)" />
+      <circle cx="223" cy="45" r="2.2" fill="var(--muted)" />
+      <circle cx="232" cy="45" r="2.2" fill="var(--muted)" />
+      <g fill="none" stroke="var(--muted)" stroke-width="1.4">
+        <path d="M216 72 h90 M216 84 h74 M216 96 h84 M216 108 h60 M216 120 h78 M216 132 h46" />
+      </g>
+      <rect class="ill-glowline" x="216" y="66" width="90" height="12" rx="2" fill="none" stroke="var(--accent)" stroke-width="1.4" />
+
+      <text x="68" y="168" text-anchor="middle" font-size="10.5" fill="var(--muted)">proyecto</text>
+      <text x="263" y="168" text-anchor="middle" font-size="10.5" fill="var(--muted)">ventana de contexto</text>
+      <text x="150" y="184" text-anchor="middle" font-size="10.5" fill="var(--muted)">Solo lo relevante entra.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'evals' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: a la izquierda, una planilla de evaluación con filas de tareas y marcas de acierto y error; a la derecha, un gráfico compara la línea base con una corrida nueva."
+      focusable="false"
+    >
+      {/* Scoreboard grid */}
+      <rect x="14" y="28" width="168" height="124" rx="6" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <path d="M14 52 H182" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" />
+      <circle cx="24" cy="40" r="2.2" fill="var(--muted)" />
+      <circle cx="33" cy="40" r="2.2" fill="var(--muted)" />
+      <circle cx="42" cy="40" r="2.2" fill="var(--muted)" />
+      <g fill="none" stroke="var(--muted)" stroke-width="1.3">
+        <path d="M28 64 h54 M28 88 h44 M28 112 h58 M28 136 h40" />
+      </g>
+      <path d="M150 64 l3 3 6 -7" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M148 84 l8 8 M156 84 l-8 8" fill="none" stroke="var(--soon)" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M150 112 l3 3 6 -7" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M148 132 l8 8 M156 132 l-8 8" fill="none" stroke="var(--soon)" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M14 76 H182 M14 100 H182 M14 124 H182" fill="none" stroke="var(--border)" stroke-width="1" opacity="0.8" />
+
+      {/* Baseline vs new run */}
+      <path d="M204 140 V38 M204 140 H326" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+      <path d="M212 112 L246 108 L280 104 L318 100" fill="none" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="4 4" />
+      <path class="ill-flow" d="M212 126 L246 112 L280 92 L318 76" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <g fill="none" stroke="var(--accent)" stroke-width="1.6">
+        <circle cx="212" cy="126" r="3" />
+        <circle cx="246" cy="112" r="3" />
+        <circle cx="280" cy="92" r="3" />
+        <circle cx="318" cy="76" r="3" />
+      </g>
+      <circle cx="318" cy="76" r="6" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="2.4 2.6" />
+
+      <text x="98" y="168" text-anchor="middle" font-size="10.5" fill="var(--muted)">tareas y resultado</text>
+      <text x="232" y="158" font-size="10.5" fill="var(--muted)">base</text>
+      <text x="286" y="158" font-size="10.5" fill="var(--accent)">nueva</text>
+      <text x="265" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">Misma vara, distinta corrida.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'seguridad-permisos' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un llavero con tres llaves, una de ellas tachada; a la derecha, una puerta dividida en sectores y un escudo sobre una carpeta que limita el acceso."
+      focusable="false"
+    >
+      {/* Key ring with three keys, one denied */}
+      <circle cx="38" cy="52" r="11" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <circle cx="38" cy="52" r="4" fill="none" stroke="var(--node-stroke)" stroke-width="1.3" />
+      <path d="M34 62 L28 98 M28 92 h6 M28 98 h5" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" />
+      <path d="M42 62 L46 98 M46 92 h6 M46 98 h5" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" stroke-linecap="round" />
+      <path d="M46 62 L58 96 M58 90 h6 M58 96 h5" fill="none" stroke="var(--soon)" stroke-width="1.6" stroke-linecap="round" />
+      <circle cx="58" cy="100" r="11" fill="none" stroke="var(--soon)" stroke-width="1.8" />
+      <path d="M50 92 L66 108" fill="none" stroke="var(--soon)" stroke-width="2" stroke-linecap="round" />
+
+      {/* Shield over the shared folder */}
+      <path d="M130 74 l13 5 v8 c0 8 -13 13 -13 13 c0 0 -13 -5 -13 -13 v-8 z" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linejoin="round" />
+      <path d="M124 91 l4 4 7 -8" fill="none" stroke="var(--accent)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M108 118 h14 l5 -7 h26 v8" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+      <rect x="108" y="118" width="45" height="26" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+      <text x="130" y="162" text-anchor="middle" font-size="10.5" fill="var(--muted)">permisos</text>
+
+      {/* Door split into sector frames */}
+      <rect x="206" y="28" width="86" height="134" rx="4" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M249 28 V162" fill="none" stroke="var(--node-stroke)" stroke-width="1.3" />
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.4">
+        <rect x="214" y="38" width="27" height="50" rx="2" />
+        <rect x="214" y="96" width="27" height="56" rx="2" />
+        <rect x="257" y="38" width="27" height="50" rx="2" />
+        <rect x="257" y="96" width="27" height="56" rx="2" />
+      </g>
+      <circle cx="280" cy="96" r="2.6" fill="var(--node-stroke)" />
+      <text x="249" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">sectores</text>
+      <text x="60" y="134" text-anchor="middle" font-size="10.5" fill="var(--muted)">llaves</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'observabilidad' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una pila de líneas de registro pasa por una lente con forma de ojo y termina en un comprobante sellado; un reloj recuerda el tiempo de cada evento."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-obs-in"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Log stack */}
+      <rect x="14" y="34" width="98" height="112" rx="5" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <path d="M14 54 H112" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7" />
+      <circle cx="24" cy="44" r="2.2" fill="var(--muted)" />
+      <circle cx="33" cy="44" r="2.2" fill="var(--muted)" />
+      <circle cx="42" cy="44" r="2.2" fill="var(--muted)" />
+      <g fill="none" stroke="var(--muted)" stroke-width="1.3">
+        <path d="M26 68 h62 M26 80 h46 M26 92 h70 M26 104 h54 M26 116 h66 M26 128 h40" />
+      </g>
+      <path d="M26 80 h30" fill="none" stroke="var(--accent)" stroke-width="1.5" />
+      <path d="M26 116 h22" fill="none" stroke="var(--accent)" stroke-width="1.5" />
+
+      {/* Lens over the trace */}
+      <path class="ill-flow" d="M114 92 L136 92" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-obs-in)" />
+      <circle cx="166" cy="92" r="26" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <path d="M150 92 q16 -12 32 0 q-16 12 -32 0 z" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <circle cx="166" cy="92" r="4" fill="var(--accent)" />
+      <path d="M185 111 L198 124" fill="none" stroke="var(--text)" stroke-width="1.8" stroke-linecap="round" />
+
+      {/* Evidence receipt with a stamp */}
+      <rect x="232" y="46" width="64" height="100" rx="3" fill="none" stroke="var(--node-stroke)" stroke-width="1.5" />
+      <g fill="none" stroke="var(--muted)" stroke-width="1.2">
+        <path d="M242 60 h44 M242 70 h32 M242 80 h40 M242 90 h26" />
+      </g>
+      <circle cx="264" cy="118" r="14" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M257 118 l5 5 10 -11" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+      {/* Clock */}
+      <circle cx="304" cy="26" r="12" fill="none" stroke="var(--accent-2)" stroke-width="1.6" />
+      <path d="M304 26 V19 M304 26 L310 30" fill="none" stroke="var(--accent-2)" stroke-width="1.6" stroke-linecap="round" />
+
+      <text x="63" y="162" text-anchor="middle" font-size="10.5" fill="var(--muted)">registro</text>
+      <text x="264" y="162" text-anchor="middle" font-size="10.5" fill="var(--muted)">evidencia</text>
+      <text x="170" y="180" text-anchor="middle" font-size="10.5" fill="var(--muted)">Sin trazas se adivina.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'agentes-paralelos' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un repositorio raíz se abre en tres worktrees, cada uno con un agente, y las tres ramas se integran en una caja final revisada con una marca de verificación."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-par-merge"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Root repository */}
+      <rect x="12" y="76" width="56" height="36" rx="5" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <text class="ill-mono" x="40" y="98" text-anchor="middle" font-size="10.5" fill="var(--text)">repo</text>
+
+      {/* Branches into three isolated worktrees */}
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.4">
+        <path d="M68 94 C86 94 88 44 108 44" />
+        <path d="M68 94 H108" />
+        <path d="M68 94 C86 94 88 144 108 144" />
+      </g>
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.6">
+        <rect x="108" y="30" width="66" height="28" rx="4" />
+        <rect x="108" y="80" width="66" height="28" rx="4" />
+        <rect x="108" y="130" width="66" height="28" rx="4" />
+      </g>
+      <circle cx="120" cy="44" r="4" fill="var(--accent)" />
+      <circle cx="120" cy="94" r="4" fill="var(--accent)" />
+      <circle cx="120" cy="144" r="4" fill="var(--accent)" />
+
+      {/* Merge into one reviewed box */}
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.4" stroke-dasharray="4 4">
+        <path d="M174 44 C196 44 198 94 216 94" />
+        <path d="M174 94 H216" />
+        <path d="M174 144 C196 144 198 94 216 94" />
+      </g>
+      <path class="ill-flow" d="M204 94 L214 94" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#arr-par-merge)" />
+      <rect class="ill-glowline" x="216" y="74" width="78" height="42" rx="5" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <circle cx="232" cy="95" r="8" fill="none" stroke="var(--accent)" stroke-width="1.7" />
+      <path d="M228 95 l3 3 6 -7" fill="none" stroke="var(--accent)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="263" y="99" text-anchor="middle" font-size="10" fill="var(--accent)">revisado</text>
+
+      <text x="141" y="176" text-anchor="middle" font-size="10.5" fill="var(--muted)">worktrees aislados</text>
+      <text x="255" y="132" text-anchor="middle" font-size="10.5" fill="var(--muted)">integración revisada</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'sdd-escala' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: una escalera de seis etapas con un documento en cada bloque; entre etapa y etapa hay una compuerta con marca de verificación que se aprueba antes de avanzar."
+      focusable="false"
+    >
+      {/* Stage blocks, rising left to right */}
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.6">
+        <rect x="12" y="124" width="40" height="30" rx="4" />
+        <rect x="64" y="108" width="40" height="30" rx="4" />
+        <rect x="116" y="92" width="40" height="30" rx="4" />
+        <rect x="168" y="76" width="40" height="30" rx="4" />
+        <rect x="220" y="60" width="40" height="30" rx="4" />
+        <rect x="272" y="44" width="40" height="30" rx="4" />
+      </g>
+
+      {/* Document lines inside each stage */}
+      <g fill="none" stroke="var(--muted)" stroke-width="1.2">
+        <path d="M20 134 h22 M20 141 h16" />
+        <path d="M72 118 h22 M72 125 h16" />
+        <path d="M124 102 h22 M124 109 h16" />
+        <path d="M176 86 h22 M176 93 h16" />
+        <path d="M228 70 h22 M228 77 h16" />
+        <path d="M280 54 h22 M280 61 h16" />
+      </g>
+      <path class="ill-glowline" d="M280 54 h22 M280 61 h16" fill="none" stroke="var(--accent)" stroke-width="1.3" />
+
+      {/* Gates between stages */}
+      <g fill="none" stroke="var(--accent)" stroke-width="1.5">
+        <circle cx="58" cy="116" r="5" />
+        <circle cx="110" cy="100" r="5" />
+        <circle cx="162" cy="84" r="5" />
+        <circle cx="214" cy="68" r="5" />
+        <circle cx="266" cy="52" r="5" />
+      </g>
+      <g fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M55.5 116 l1.8 1.8 3.2 -3.8" />
+        <path d="M107.5 100 l1.8 1.8 3.2 -3.8" />
+        <path d="M159.5 84 l1.8 1.8 3.2 -3.8" />
+        <path d="M211.5 68 l1.8 1.8 3.2 -3.8" />
+        <path d="M263.5 52 l1.8 1.8 3.2 -3.8" />
+      </g>
+
+      <text x="170" y="176" text-anchor="middle" font-size="10.5" fill="var(--muted)">Cada etapa deja constancia y pasa el control.</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'herramientas-propias' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un banco de trabajo con un engranaje de script, un enchufe MCP y una tarjeta de receta de skill; a un costado, una caja con la regla simple if aparece marcada."
+      focusable="false"
+    >
+      {/* Workbench */}
+      <path d="M12 148 H328" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round" />
+      <path d="M34 148 V172 M306 148 V172" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+
+      {/* Script: a cog */}
+      <circle cx="58" cy="108" r="16" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <circle cx="58" cy="108" r="6" fill="none" stroke="var(--text)" stroke-width="1.5" />
+      <path d="M58 88 v-5 M58 128 v5 M38 108 h-5 M78 108 h5 M44 94 l-4 -4 M72 94 l4 -4 M44 122 l-4 4 M72 122 l4 4" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" />
+      <text x="58" y="140" text-anchor="middle" font-size="10.5" fill="var(--muted)">script</text>
+
+      {/* MCP: a standard plug */}
+      <rect class="ill-glowline" x="142" y="94" width="30" height="18" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M136 98 h6 M136 108 h6" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M172 103 C184 103 188 112 200 112" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 4" />
+      <text x="157" y="140" text-anchor="middle" font-size="10.5" fill="var(--muted)">MCP</text>
+
+      {/* Skill: a recipe card */}
+      <rect x="224" y="74" width="54" height="50" rx="5" fill="none" stroke="var(--node-stroke)" stroke-width="1.6" />
+      <path d="M232 88 h38 M232 98 h28 M232 108 h34" fill="none" stroke="var(--muted)" stroke-width="1.2" />
+      <path d="M232 118 h20" fill="none" stroke="var(--accent)" stroke-width="1.4" />
+      <text x="251" y="140" text-anchor="middle" font-size="10.5" fill="var(--muted)">skill</text>
+
+      {/* Inverse criterion: a plain rule beats an agent */}
+      <rect x="292" y="94" width="34" height="26" rx="3" fill="none" stroke="var(--accent-2)" stroke-width="1.6" />
+      <text class="ill-mono" x="309" y="112" text-anchor="middle" font-size="12" fill="var(--accent-2)">if</text>
+      <circle cx="318" cy="86" r="6" fill="none" stroke="var(--accent)" stroke-width="1.6" />
+      <path d="M315 86 l2 2 4.5 -4.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="309" y="140" text-anchor="middle" font-size="10.5" fill="var(--muted)">regla simple</text>
+    </svg>
+  )
+}
+
+{
+  conceptId === 'legado-con-agentes' && (
+    <svg
+      class="concept-illustration"
+      viewBox="0 0 340 190"
+      role="img"
+      aria-label="Ilustración: un edificio antiguo de ladrillos VB6 y un andamio nuevo al lado; una flecha estranguladora traslada una pieza por vez y una cadena de commits marca cada corte."
+      focusable="false"
+    >
+      <defs>
+        <marker
+          id="arr-legacy-move"
+          viewBox="0 0 10 10"
+          refX="8"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
+
+      {/* Old building: brick grid */}
+      <rect x="14" y="34" width="92" height="112" rx="3" fill="none" stroke="var(--text)" stroke-width="1.7" />
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.2">
+        <path d="M14 52 H106 M14 70 H106 M14 88 H106 M14 106 H106 M14 124 H106" />
+        <path d="M38 34 V52 M62 52 V70 M38 70 V88 M62 88 V106 M38 106 V124 M62 124 V146" />
+      </g>
+      <text class="ill-mono" x="60" y="164" text-anchor="middle" font-size="10.5" fill="var(--muted)">VB6</text>
+
+      {/* New scaffold beside it */}
+      <rect x="234" y="34" width="92" height="112" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6 4" />
+      <g fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.85">
+        <path d="M256 34 V146 M280 34 V146 M234 62 H326 M234 90 H326 M234 118 H326" />
+        <path d="M234 34 L256 62 M256 62 L234 90 M256 90 L280 118 M280 62 L304 90 M304 90 L280 118" />
+      </g>
+      <text x="280" y="164" text-anchor="middle" font-size="10.5" fill="var(--accent)">nuevo</text>
+
+      {/* Strangler arrow moving one piece at a time */}
+      <path class="ill-flow" d="M108 92 C150 92 172 82 228 82" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arr-legacy-move)" />
+      <rect class="ill-fall" x="164" y="76" width="16" height="12" rx="2" fill="none" stroke="var(--accent-2)" stroke-width="1.6" />
+      <text x="170" y="28" text-anchor="middle" font-size="10.5" fill="var(--muted)">una pieza por vez</text>
+
+      {/* Commit checkpoints along the bottom */}
+      <path d="M20 180 H320" fill="none" stroke="var(--node-stroke)" stroke-width="1.4" />
+      <g fill="none" stroke="var(--node-stroke)" stroke-width="1.4">
+        <circle cx="30" cy="180" r="4" />
+        <circle cx="70" cy="180" r="4" />
+        <circle cx="110" cy="180" r="4" />
+        <circle cx="190" cy="180" r="4" />
+        <circle cx="230" cy="180" r="4" />
+        <circle cx="270" cy="180" r="4" />
+        <circle cx="310" cy="180" r="4" />
+      </g>
+      <circle class="ill-glowline" cx="150" cy="180" r="5" fill="none" stroke="var(--accent)" stroke-width="1.8" />
+      <path d="M147 180 l2 2 4 -5" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  )
+}

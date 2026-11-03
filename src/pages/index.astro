@@ -1,0 +1,859 @@
+---
+import { VIEWBOX, levels, LEVEL_IDS } from '../data/concepts.js';
+import ConceptMap from '../components/ConceptMap.astro';
+import ConceptPanel from '../components/ConceptPanel.astro';
+import QuickDrawer from '../components/QuickDrawer.astro';
+import Quiz from '../components/Quiz.astro';
+import '../styles/main.css';
+
+const levelList = LEVEL_IDS.map((id) => levels[id]);
+
+// Next/previous stops are computed per level, so each journey is self-contained.
+function journeyMaps(level) {
+  const nextById = new Map(
+    level.journeyOrder
+      .map((id, i) => [id, level.journeyOrder[i + 1]])
+      .filter(([, next]) => Boolean(next))
+  );
+  const prevById = new Map(
+    level.journeyOrder
+      .map((id, i) => [id, level.journeyOrder[i - 1]])
+      .filter(([, prev]) => Boolean(prev))
+  );
+  return {
+    nextConceptOf: (id) => level.concepts.find((c) => c.id === nextById.get(id)),
+    prevConceptOf: (id) => level.concepts.find((c) => c.id === prevById.get(id)),
+  };
+}
+
+const journeys = new Map(levelList.map((level) => [level.id, journeyMaps(level)]));
+
+/* Quick-reference drawer entries: Tips and Errores frecuentes. */
+const tipsEntries = [
+  {
+    title: 'Pedir de a poco',
+    detail: 'Apuntar a los archivos necesarios, no al proyecto completo. Menos contexto, menos tokens, mejores respuestas.',
+    conceptId: 'produccion',
+  },
+  {
+    title: 'Comience por tareas chicas',
+    detail: 'Confianza en pasos cortos antes que en saltos largos.',
+    conceptId: 'por-que-un-agente',
+  },
+  {
+    title: 'Escribir AGENTS.md temprano',
+    detail: 'Las reglas permanentes en un archivo reemplazan cada explicación repetida en el chat.',
+    conceptId: 'caparazon-agente',
+  },
+  {
+    title: 'Punto de guardado antes de cambios grandes',
+    detail: 'Un commit antes de delegar convierte el error en retroceso simple.',
+    conceptId: 'git-con-ia',
+  },
+  {
+    title: 'Pruebas antes y después',
+    detail: 'Si las pruebas corren antes y después del cambio, el mismo agente demuestra qué rompió.',
+    conceptId: 'pruebas-con-ia',
+  },
+  {
+    title: 'Si no se entiende, no se acepta',
+    detail: 'El resultado ilegible se devuelve al agente con la duda concreta, nunca se hereda.',
+    conceptId: 'produccion',
+  },
+];
+
+const errorsEntries = [
+  {
+    title: 'Aceptar el diff sin leerlo',
+    detail: 'El agente se equivoca con confianza; el diff siempre se lee antes de aceptar.',
+    conceptId: 'git-con-ia',
+  },
+  {
+    title: 'Asumir que ya conoce su proyecto',
+    detail: 'Sin contexto y sin AGENTS.md, el agente inventa convenciones plausibles y las sigue con seguridad.',
+    conceptId: 'caparazon-agente',
+  },
+  {
+    title: 'Pegar todo el código en el chat',
+    detail: 'Contexto enorme, caro y fuera de control; los archivos del proyecto son la fuente, el chat no.',
+    conceptId: 'motor-llm',
+  },
+  {
+    title: 'Pedir explicaciones cuando se puede pedir el cambio',
+    detail: 'Pida que lo implemente y revise el resultado; no pida otro párrafo sobre cómo se haría.',
+    conceptId: 'por-que-un-agente',
+  },
+  {
+    title: 'Un solo modelo para todo',
+    detail: 'El modelo más grande es más lento y más caro para cada tarea; reserve el grande para lo difícil.',
+    conceptId: 'motor-llm',
+  },
+  {
+    title: 'Cambiar sin red de seguridad',
+    detail: 'Métodos sin pruebas ni commits: cuando algo se rompe, nadie sabe dónde empezar.',
+    conceptId: 'pruebas-con-ia',
+  },
+];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Curso de IA Agéntica</title>
+    <meta
+      name="description"
+      content="Un mapa interactivo para pasar de ChatGPT a agentes que trabajan: recorra los conceptos y aprenda en orden."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      // Apply the stored theme (or the OS preference) before first paint
+      // to avoid a flash of the wrong theme.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('curso-agente-theme');
+        } catch (e) {
+          stored = null;
+        }
+        var prefersLight =
+          window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: light)').matches;
+        var theme = stored === 'light' || stored === 'dark' ? stored : prefersLight ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="site-header-cluster">
+          <div class="site-header-actions">
+            <button
+              id="drawer-tips-trigger"
+              class="drawer-trigger"
+              type="button"
+              data-drawer-open="tips"
+              aria-expanded="false"
+              aria-controls="drawer-tips"
+            >
+              Tips
+            </button>
+            <button
+              id="drawer-errors-trigger"
+              class="drawer-trigger"
+              type="button"
+              data-drawer-open="errores"
+              aria-expanded="false"
+              aria-controls="drawer-errores"
+            >
+              Errores frecuentes
+            </button>
+          </div>
+          <div class="site-brand">
+            <h1 class="site-title">Curso de IA Agéntica</h1>
+            <p class="site-subtitle">
+              Un mapa interactivo para pasar de ChatGPT a agentes que trabajan
+            </p>
+            <p class="site-level-status" id="level-status" aria-live="polite">
+              {levels.base.statusLabel}
+            </p>
+          </div>
+        </div>
+        <div class="site-header-controls">
+          <div class="level-switch" role="group" aria-label="Nivel del curso">
+            <button
+              class="level-switch-btn"
+              type="button"
+              data-level="base"
+              aria-pressed="true"
+            >
+              Base
+            </button>
+            <button
+              class="level-switch-btn"
+              type="button"
+              data-level="intermedio"
+              aria-pressed="false"
+            >
+              Intermedio
+            </button>
+            <button
+              class="level-switch-btn"
+              type="button"
+              data-level="avanzado"
+              aria-pressed="false"
+            >
+              Avanzado
+            </button>
+          </div>
+          <button
+            id="theme-toggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="Cambiar entre tema oscuro y claro"
+          >
+            <span class="theme-toggle-icon" aria-hidden="true">☀</span>
+            <span class="theme-toggle-text">Tema claro</span>
+          </button>
+          <button
+            id="quiz-trigger"
+            class="drawer-trigger quiz-trigger"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="quiz-dialog"
+            aria-expanded="false"
+          >
+            Quiz
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="map-wrapper">
+        <div class="map-frame">
+          <ConceptMap
+            concepts={levels.base.concepts}
+            viewbox={VIEWBOX}
+            ariaLabel={levels.base.mapAria}
+          />
+        </div>
+        <p class="map-hint" id="map-hint">{levels.base.hint}</p>
+        <ul class="map-legend">
+          <li><span class="legend-dot legend-dot-visited" aria-hidden="true"></span>Concepto recorrido</li>
+          <li><span class="legend-dot legend-dot-new" aria-hidden="true"></span>Sin visitar</li>
+        </ul>
+      </div>
+
+      <div id="panel-backdrop" class="panel-backdrop" hidden></div>
+      {
+        levelList.map((level) =>
+          level.concepts.map((c) => (
+            <ConceptPanel
+              concept={c}
+              total={level.concepts.length}
+              nextConcept={journeys.get(level.id).nextConceptOf(c.id)}
+              prevConcept={journeys.get(level.id).prevConceptOf(c.id)}
+              level={level.id}
+            />
+          ))
+        )
+      }
+
+      <QuickDrawer
+        id="tips"
+        title="Tips"
+        intro="Atajos que evitan trabajo perdido. Cada tip conecta con el concepto que lo explica."
+        entries={tipsEntries}
+      />
+      <QuickDrawer
+        id="errores"
+        title="Errores frecuentes"
+        intro="Tropezones conocidos: cómo detectarlos y qué hacer en su lugar."
+        entries={errorsEntries}
+      />
+      <Quiz />
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <strong>Curso de IA Agéntica</strong> — material de estudio. El progreso
+        del recorrido se guarda en este navegador.
+      </p>
+    </footer>
+  </body>
+</html>
+
+<script>
+  /**
+   * Client behavior: level switch, theme toggle, node navigation, side panel,
+   * URL state, per-level visited progress, line-drawing animation, a11y.
+   */
+  import {
+    levels,
+    LEVEL_IDS,
+    DEFAULT_LEVEL,
+    levelOfConcept,
+  } from '../data/concepts.js';
+  import { quizQuestions, quizTierFor } from '../data/quiz.js';
+  import { renderMapMarkup } from '../lib/mapMarkup.js';
+
+  const THEME_KEY = 'curso-agente-theme';
+  const LEVEL_KEY = 'curso-agente-level';
+  const VISITED_PREFIX = 'curso-agente-visited';
+  const QUIZ_BEST_KEY = 'quiz:best';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const doc = document.documentElement;
+  const mapEl = document.querySelector('.concept-map');
+  const hintEl = document.getElementById('map-hint');
+  const statusEl = document.getElementById('level-status');
+  const levelButtons = [...document.querySelectorAll('.level-switch [data-level]')];
+  const backdrop = document.getElementById('panel-backdrop');
+  const quizEl = document.getElementById('quiz-dialog');
+  const quizTrigger = document.getElementById('quiz-trigger');
+
+  let storageUnavailable = false;
+
+  /* ---------- Theme toggle ---------- */
+  const themeToggle = document.getElementById('theme-toggle');
+  const toggleIcon = themeToggle.querySelector('.theme-toggle-icon');
+  const toggleText = themeToggle.querySelector('.theme-toggle-text');
+
+  function renderToggle() {
+    const dark = doc.dataset.theme !== 'light';
+    toggleIcon.textContent = dark ? '☀' : '☾';
+    toggleText.textContent = dark ? 'Tema claro' : 'Tema oscuro';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const next = doc.dataset.theme === 'light' ? 'dark' : 'light';
+    doc.dataset.theme = next;
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch (e) {
+      storageUnavailable = true;
+    }
+    renderToggle();
+  });
+
+  // No-JS safe default: render button label from the current theme.
+  doc.classList.add('has-js');
+  renderToggle();
+
+  /* ---------- Per-level visited progress ---------- */
+  const visitedByLevel = {};
+
+  function loadVisited(levelId) {
+    const validIds = new Set(levels[levelId].concepts.map((c) => c.id));
+    try {
+      const raw = JSON.parse(localStorage.getItem(`${VISITED_PREFIX}:${levelId}`) || '[]');
+      return new Set(Array.isArray(raw) ? raw.filter((id) => validIds.has(id)) : []);
+    } catch (e) {
+      return new Set();
+    }
+  }
+
+  function persistVisited(levelId) {
+    if (storageUnavailable) return;
+    try {
+      localStorage.setItem(
+        `${VISITED_PREFIX}:${levelId}`,
+        JSON.stringify([...visitedByLevel[levelId]])
+      );
+    } catch (e) {
+      storageUnavailable = true;
+    }
+  }
+
+  for (const levelId of LEVEL_IDS) {
+    visitedByLevel[levelId] = loadVisited(levelId);
+  }
+
+  const panelEls = new Map(
+    [...document.querySelectorAll('.panel')].map((el) => [el.dataset.conceptId, el])
+  );
+  const drawerEls = new Map(
+    [...document.querySelectorAll('[data-drawer-id]')].map((el) => [el.dataset.drawerId, el])
+  );
+
+  let currentLevel = DEFAULT_LEVEL;
+  let openId = null;
+  let openDrawerId = null;
+  let drawerTrigger = null;
+
+  function applyNodeStates() {
+    const visited = visitedByLevel[currentLevel];
+    mapEl.querySelectorAll('.node').forEach((el) => {
+      el.classList.toggle('is-visited', visited.has(el.dataset.id));
+    });
+    mapEl.querySelectorAll('.edge').forEach((edge) => {
+      const both =
+        visited.has(edge.dataset.source) && visited.has(edge.dataset.target);
+      edge.classList.toggle('is-lit', both);
+    });
+  }
+
+  /* ---------- URL state ---------- */
+  function syncUrl() {
+    const url = new URL(window.location.href);
+    if (currentLevel !== DEFAULT_LEVEL) url.searchParams.set('nivel', currentLevel);
+    else url.searchParams.delete('nivel');
+    if (openId) url.searchParams.set('concepto', openId);
+    else url.searchParams.delete('concepto');
+    window.history.replaceState(null, '', url.pathname + url.search);
+  }
+
+  /* ---------- Map rendering ---------- */
+  function animateEdges() {
+    if (reduceMotion.matches) return;
+    mapEl.querySelectorAll('.edge').forEach((edge, index) => {
+      const length = edge.getTotalLength();
+      edge.style.strokeDasharray = `${length}`;
+      edge.style.strokeDashoffset = `${length}`;
+      edge.getBoundingClientRect(); // force layout
+      edge.style.transition = `stroke-dashoffset 900ms ${index * 260}ms ease-out`;
+      edge.style.strokeDashoffset = '0';
+    });
+  }
+
+  function renderMap() {
+    const level = levels[currentLevel];
+    mapEl.setAttribute('aria-label', level.mapAria);
+    mapEl.innerHTML = renderMapMarkup(level.concepts);
+    hintEl.textContent = level.hint;
+    statusEl.textContent = level.statusLabel;
+    levelButtons.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.level === currentLevel));
+    });
+    applyNodeStates();
+    animateEdges();
+  }
+
+  /* ---------- Panel open / close ---------- */
+  function resetPanelState() {
+    if (openId) {
+      const panel = panelEls.get(openId);
+      if (panel) panel.hidden = true;
+      openId = null;
+    }
+    mapEl.querySelectorAll('.node').forEach((el) => el.classList.remove('is-active'));
+  }
+
+  function resetDrawerState() {
+    if (openDrawerId) {
+      const drawer = drawerEls.get(openDrawerId);
+      if (drawer) drawer.hidden = true;
+    }
+    if (drawerTrigger) drawerTrigger.setAttribute('aria-expanded', 'false');
+    openDrawerId = null;
+    drawerTrigger = null;
+  }
+
+  function resetOverlays() {
+    closeQuiz({ restoreFocus: false });
+    resetPanelState();
+    resetDrawerState();
+    backdrop.hidden = true;
+    document.body.classList.remove('panel-open');
+  }
+
+  function openPanel(id, { focusPanel = true } = {}) {
+    const owner = levelOfConcept(id);
+    if (!owner) return;
+    if (!quizEl.hidden) closeQuiz({ restoreFocus: false });
+    if (owner !== currentLevel) {
+      switchLevel(owner, { openConcept: id, focusPanel });
+      return;
+    }
+    const panel = panelEls.get(id);
+    if (!panel) return;
+    if (openId && openId !== id) panelEls.get(openId).hidden = true;
+    if (openDrawerId) closeDrawer({ restoreFocus: false });
+    openId = id;
+    panel.hidden = false;
+    backdrop.hidden = false;
+    document.body.classList.add('panel-open');
+    panel.classList.remove('panel-leaving');
+
+    mapEl.querySelectorAll('.node').forEach((el) => {
+      el.classList.toggle('is-active', el.dataset.id === id);
+    });
+
+    visitedByLevel[currentLevel].add(id);
+    persistVisited(currentLevel);
+    applyNodeStates();
+    syncUrl();
+
+    if (focusPanel) panel.focus();
+  }
+
+  function closePanel({ restoreFocus = true } = {}) {
+    if (!openId) return;
+    const previousId = openId;
+    resetPanelState();
+    backdrop.hidden = true;
+    document.body.classList.remove('panel-open');
+    syncUrl();
+    if (restoreFocus) {
+      const node = mapEl.querySelector(`.node[data-id="${previousId}"]`);
+      if (node) node.focus();
+    }
+  }
+
+  /* ---------- Drawer open / close (slides in from the left) ---------- */
+  function openDrawer(id, trigger) {
+    const drawer = drawerEls.get(id);
+    if (!drawer) return;
+    if (!quizEl.hidden) closeQuiz({ restoreFocus: false });
+    if (openId) closePanel({ restoreFocus: false });
+    if (openDrawerId && openDrawerId !== id) closeDrawer({ restoreFocus: false });
+    openDrawerId = id;
+    const wasOpen = !drawer.hidden;
+    drawer.hidden = false;
+    backdrop.hidden = false;
+    document.body.classList.add('panel-open');
+    drawer.classList.remove('drawer-leaving');
+    drawerTrigger = trigger;
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    if (!wasOpen) drawer.focus();
+  }
+
+  function closeDrawer({ restoreFocus = true } = {}) {
+    if (!openDrawerId) return;
+    const trigger = drawerTrigger;
+    resetDrawerState();
+    backdrop.hidden = true;
+    document.body.classList.remove('panel-open');
+    if (restoreFocus && trigger) trigger.focus();
+  }
+
+  /* ---------- Quiz modal (centered, internally scrollable) ---------- */
+  const quizViewEls = [...quizEl.querySelectorAll('[data-quiz-view]')];
+  const quizQuestionEls = [...quizEl.querySelectorAll('[data-quiz-question]')];
+  const quizProgressEl = quizEl.querySelector('[data-quiz-progress]');
+  const quizProgressBar = quizEl.querySelector('[role="progressbar"]');
+  const quizProgressFill = quizEl.querySelector('[data-quiz-progress-fill]');
+  const quizLiveEl = quizEl.querySelector('[data-quiz-live]');
+  const quizScoreEl = quizEl.querySelector('[data-quiz-score]');
+  const quizTierEl = quizEl.querySelector('[data-quiz-tier]');
+  const quizBestEl = quizEl.querySelector('[data-quiz-best]');
+  const quizBestNewEl = quizEl.querySelector('[data-quiz-best-new]');
+  const quizTotal = quizQuestions.length;
+
+  let quizIndex = 0;
+  let quizScore = 0;
+  let quizAnswered = false;
+  let quizFinished = false;
+
+  function showQuizView(name) {
+    quizViewEls.forEach((view) => {
+      view.hidden = view.dataset.quizView !== name;
+    });
+  }
+
+  function focusQuizPrimary() {
+    const view = quizViewEls.find((el) => !el.hidden);
+    const target = view?.querySelector(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (target) target.focus();
+    else quizEl.focus();
+  }
+
+  function readQuizBest() {
+    try {
+      const raw = localStorage.getItem(QUIZ_BEST_KEY);
+      if (raw === null) return null;
+      const value = Number.parseInt(raw, 10);
+      return Number.isInteger(value) && value >= 0 && value <= quizTotal
+        ? value
+        : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeQuizBest(value) {
+    try {
+      localStorage.setItem(QUIZ_BEST_KEY, `${value}/${quizTotal}`);
+    } catch (e) {
+      storageUnavailable = true;
+    }
+  }
+
+  function resetQuizQuestion(questionEl) {
+    questionEl.hidden = true;
+    questionEl.querySelectorAll('[data-quiz-option]').forEach((option) => {
+      option.disabled = false;
+      option.classList.remove('is-correct', 'is-wrong');
+    });
+    const feedback = questionEl.querySelector('[data-quiz-feedback]');
+    if (feedback) feedback.hidden = true;
+    const next = questionEl.querySelector('[data-quiz-next]');
+    if (next) next.hidden = true;
+  }
+
+  function resetQuizState() {
+    quizIndex = 0;
+    quizScore = 0;
+    quizAnswered = false;
+    quizFinished = false;
+    quizQuestionEls.forEach(resetQuizQuestion);
+    quizLiveEl.textContent = '';
+    quizBestEl.hidden = true;
+    quizBestNewEl.hidden = true;
+    showQuizView('intro');
+  }
+
+  function renderQuizQuestion() {
+    quizQuestionEls.forEach(resetQuizQuestion);
+    const questionEl = quizQuestionEls[quizIndex];
+    questionEl.hidden = false;
+    const next = questionEl.querySelector('[data-quiz-next]');
+    next.textContent = quizIndex === quizTotal - 1 ? 'Ver resultado' : 'Siguiente';
+
+    quizProgressEl.textContent = `Pregunta ${quizIndex + 1} de ${quizTotal}`;
+    quizProgressBar.setAttribute('aria-valuenow', String(quizIndex + 1));
+    quizProgressFill.style.width = `${((quizIndex + 1) / quizTotal) * 100}%`;
+    quizLiveEl.textContent = '';
+    quizAnswered = false;
+
+    const firstOption = questionEl.querySelector('[data-quiz-option]');
+    if (firstOption) firstOption.focus();
+  }
+
+  function startQuiz() {
+    quizIndex = 0;
+    quizScore = 0;
+    quizAnswered = false;
+    quizFinished = false;
+    showQuizView('question');
+    renderQuizQuestion();
+  }
+
+  function answerQuiz(optionEl) {
+    if (quizAnswered) return;
+    const question = quizQuestions[quizIndex];
+    const questionEl = quizQuestionEls[quizIndex];
+    const chosen = Number(optionEl.dataset.quizOption);
+    const isCorrect = chosen === question.correctIndex;
+    quizAnswered = true;
+    if (isCorrect) quizScore += 1;
+
+    questionEl.querySelectorAll('[data-quiz-option]').forEach((option) => {
+      const value = Number(option.dataset.quizOption);
+      option.disabled = true;
+      if (value === question.correctIndex) option.classList.add('is-correct');
+      else if (value === chosen) option.classList.add('is-wrong');
+    });
+
+    const feedback = questionEl.querySelector('[data-quiz-feedback]');
+    feedback.hidden = false;
+    const next = questionEl.querySelector('[data-quiz-next]');
+    next.hidden = false;
+    quizLiveEl.textContent = isCorrect
+      ? `Correcto. ${question.explanation}`
+      : `Incorrecto. La respuesta correcta es: ${question.options[question.correctIndex]}. ${question.explanation}`;
+    next.focus();
+  }
+
+  function finishQuiz() {
+    quizFinished = true;
+    showQuizView('results');
+    quizScoreEl.textContent = `${quizScore}/${quizTotal}`;
+    quizTierEl.textContent = quizTierFor(quizScore);
+
+    const previousBest = readQuizBest();
+    const isNewBest = previousBest === null || quizScore > previousBest;
+    if (isNewBest) writeQuizBest(quizScore);
+    const best = isNewBest ? quizScore : previousBest;
+    quizBestEl.textContent = `Mejor resultado: ${best}/${quizTotal}`;
+    quizBestEl.hidden = false;
+    quizBestNewEl.hidden = !isNewBest;
+
+    quizLiveEl.textContent = `Quiz completado: ${quizScore} de ${quizTotal}. ${quizTierFor(quizScore)}`;
+    const restart = quizEl.querySelector('[data-quiz-restart]');
+    if (restart) restart.focus();
+  }
+
+  function advanceQuiz() {
+    if (!quizAnswered) return;
+    if (quizIndex < quizTotal - 1) {
+      quizIndex += 1;
+      renderQuizQuestion();
+      return;
+    }
+    finishQuiz();
+  }
+
+  function openQuiz() {
+    if (quizFinished) resetQuizState();
+    if (openId) closePanel({ restoreFocus: false });
+    if (openDrawerId) closeDrawer({ restoreFocus: false });
+    quizEl.hidden = false;
+    backdrop.hidden = false;
+    document.body.classList.add('panel-open');
+    quizTrigger.setAttribute('aria-expanded', 'true');
+    focusQuizPrimary();
+  }
+
+  function closeQuiz({ restoreFocus = true } = {}) {
+    if (quizEl.hidden) return;
+    const wasFinished = quizFinished;
+    quizEl.hidden = true;
+    quizTrigger.setAttribute('aria-expanded', 'false');
+    backdrop.hidden = true;
+    document.body.classList.remove('panel-open');
+    if (wasFinished) resetQuizState();
+    if (restoreFocus) quizTrigger.focus();
+  }
+
+  /* ---------- Level switch ---------- */
+  function switchLevel(levelId, { openConcept = null, focusPanel = true } = {}) {
+    if (!levels[levelId]) return;
+    if (levelId !== currentLevel) {
+      resetOverlays();
+      currentLevel = levelId;
+      try {
+        localStorage.setItem(LEVEL_KEY, levelId);
+      } catch (e) {
+        storageUnavailable = true;
+      }
+      renderMap();
+    }
+    if (openConcept) openPanel(openConcept, { focusPanel });
+    else syncUrl();
+  }
+
+  levelButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.level;
+      if (next && next !== currentLevel) switchLevel(next);
+    });
+  });
+
+  /* ---------- Events: clicks, delegation, keyboard ---------- */
+  mapEl.addEventListener('click', (ev) => {
+    const node = ev.target.closest('.node');
+    if (node) openPanel(node.dataset.id);
+  });
+
+  mapEl.addEventListener('keydown', (ev) => {
+    const node = ev.target.closest('.node');
+    if (!node) return;
+    if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') {
+      ev.preventDefault();
+      openPanel(node.dataset.id);
+    }
+  });
+
+  document.querySelectorAll('[data-drawer-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.drawerOpen;
+      if (openDrawerId === next) {
+        closeDrawer();
+        return;
+      }
+      openDrawer(next, btn);
+    });
+  });
+
+  quizTrigger.addEventListener('click', () => {
+    if (quizEl.hidden) openQuiz();
+    else closeQuiz();
+  });
+
+  quizEl.addEventListener('click', (ev) => {
+    if (ev.target.closest('[data-quiz-start]')) {
+      startQuiz();
+      return;
+    }
+    if (ev.target.closest('[data-quiz-restart]')) {
+      startQuiz();
+      return;
+    }
+    if (ev.target.closest('[data-quiz-next]')) {
+      advanceQuiz();
+      return;
+    }
+    if (ev.target.closest('[data-close-quiz]')) {
+      closeQuiz();
+      return;
+    }
+    const option = ev.target.closest('[data-quiz-option]');
+    if (option && !option.disabled) {
+      answerQuiz(option);
+      return;
+    }
+    const chip = ev.target.closest('[data-quiz-concept]');
+    if (chip) {
+      const conceptId = chip.dataset.quizConcept;
+      closeQuiz({ restoreFocus: false });
+      openPanel(conceptId);
+    }
+  });
+
+  // Keep keyboard focus inside the modal while it is open.
+  quizEl.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Tab') return;
+    const focusable = [
+      ...quizEl.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ),
+    ].filter((el) => el.getClientRects().length > 0);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (ev.shiftKey && document.activeElement === first) {
+      ev.preventDefault();
+      last.focus();
+    } else if (!ev.shiftKey && document.activeElement === last) {
+      ev.preventDefault();
+      first.focus();
+    }
+  });
+
+  document.addEventListener('click', (ev) => {
+    const openBtn = ev.target.closest('[data-open-concept]');
+    if (openBtn) {
+      openPanel(openBtn.dataset.openConcept);
+      return;
+    }
+    if (ev.target.closest('[data-close-panel]')) {
+      closePanel();
+      return;
+    }
+    if (ev.target.closest('[data-close-drawer]')) {
+      closeDrawer();
+      return;
+    }
+    if (ev.target === backdrop) {
+      if (!quizEl.hidden) closeQuiz();
+      else if (openId) closePanel();
+      else if (openDrawerId) closeDrawer();
+    }
+  });
+
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') {
+      if (!quizEl.hidden) closeQuiz();
+      else if (openDrawerId) closeDrawer();
+      else if (openId) closePanel();
+    }
+  });
+
+  /* ---------- Load: URL state and persisted level ---------- */
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('concepto');
+  const requestedLevel = requested ? levelOfConcept(requested) : null;
+  const urlLevel = params.get('nivel');
+  let storedLevel = null;
+  try {
+    storedLevel = localStorage.getItem(LEVEL_KEY);
+  } catch (e) {
+    storedLevel = null;
+  }
+
+  // An explicit valid concept is the strongest signal: open its own level.
+  if (requestedLevel) currentLevel = requestedLevel;
+  else if (LEVEL_IDS.includes(urlLevel)) currentLevel = urlLevel;
+  else if (LEVEL_IDS.includes(storedLevel)) currentLevel = storedLevel;
+
+  // Persist the resolved level so a shared URL or a plain reload keeps it.
+  try {
+    localStorage.setItem(LEVEL_KEY, currentLevel);
+  } catch (e) {
+    storageUnavailable = true;
+  }
+
+  renderMap();
+
+  if (requested && requestedLevel === currentLevel) {
+    openPanel(requested);
+  } else {
+    syncUrl();
+  }
+</script>

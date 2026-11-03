@@ -1,0 +1,62 @@
+---
+/**
+ * One quick-reference drawer (Tips / Errores frecuentes); the client script toggles it.
+ * Mirrors the ConceptPanel behavior, sliding in from the left.
+ */
+import { getConcept } from '../data/concepts.js';
+
+const { id, title, intro, entries } = Astro.props;
+const drawerId = `drawer-${id}`;
+const relatedTitle = (conceptId) => {
+  const concept = getConcept(conceptId);
+  return concept?.mapLabel?.join(' ') || concept?.title || conceptId;
+};
+---
+
+<section
+  class="drawer"
+  id={drawerId}
+  data-drawer-id={id}
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby={`drawer-title-${id}`}
+  tabindex="-1"
+  hidden
+>
+  <header class="drawer-header">
+    <button
+      class="drawer-close"
+      type="button"
+      data-close-drawer
+      aria-label={`Cerrar la guía de ${title}`}
+    >
+      ✕
+    </button>
+    <h2 class="drawer-title" id={`drawer-title-${id}`}>{title}</h2>
+  </header>
+
+  <div class="drawer-body">
+    <p class="drawer-intro">{intro}</p>
+    <ul class="drawer-list">
+      {entries.map((entry) => (
+        <li>
+          <details class="drawer-entry">
+            <summary class="drawer-entry-summary">
+              <h3 class="drawer-entry-heading">{entry.title}</h3>
+            </summary>
+            <div class="drawer-entry-body">
+              <p>{entry.detail}</p>
+            </div>
+          </details>
+          <button
+            class="drawer-entry-cta"
+            type="button"
+            data-open-concept={entry.conceptId}
+          >
+            {`Ver: ${relatedTitle(entry.conceptId)}`}
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

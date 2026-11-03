@@ -1,0 +1,125 @@
+---
+/**
+ * One side-panel per concept, rendered hidden; the client script toggles them.
+ * Progressive disclosure: one-line analogy up top, expandable layers below.
+ */
+const { concept, total, nextConcept, prevConcept, level } = Astro.props;
+const isSoon = concept.status !== 'published';
+import ConceptIllustration from './ConceptIllustration.astro';
+---
+
+<section
+  class="panel"
+  id={`panel-${concept.id}`}
+  data-concept-id={concept.id}
+  data-level={level}
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby={`panel-title-${concept.id}`}
+  tabindex="-1"
+  hidden
+>
+  <header class="panel-header">
+    <button
+      class="panel-close"
+      type="button"
+      data-close-panel
+      aria-label={`Cerrar el panel del concepto ${concept.title}`}
+    >
+      ✕
+    </button>
+    <p class="panel-kicker">
+      {`Concepto ${concept.number} de ${total}`}
+      <span class={
+        isSoon
+          ? 'panel-status panel-status-soon'
+          : 'panel-status panel-status-ready'
+      }
+      >
+        {isSoon ? 'En construcción' : 'Disponible'}
+      </span>
+    </p>
+    <h2 class="panel-title" id={`panel-title-${concept.id}`}>
+      {concept.title}
+    </h2>
+    <p class="panel-tagline">{concept.tagline}</p>
+  </header>
+
+  <div class="panel-body">
+    {
+      isSoon ? (
+        <p class="panel-teaser">
+          {concept.teaser}
+          <br />
+          <span class="panel-teaser-note">
+            Suscríbase a los avisos del curso para saber cuándo estará disponible.
+          </span>
+        </p>
+      ) : (
+        <>
+          <p class="panel-analogy">{concept.analogy}</p>
+          {concept.status === 'published' && (
+            <ConceptIllustration conceptId={concept.id} />
+          )}
+          {concept.sections.map((section) => (
+            <details class="panel-section">
+              <summary>
+                <h3 class="panel-section-heading">{section.heading}</h3>
+              </summary>
+              <div class="panel-section-body">
+                {section.intro && <p>{section.intro}</p>}
+                {section.bullets && (
+                  <ul>
+                    {section.bullets.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                )}
+                {section.steps && (
+                  <ol>
+                    {section.steps.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ol>
+                )}
+                {section.code && (
+                  <pre class="panel-code"><code>{section.code.join('\n')}</code></pre>
+                )}
+              </div>
+            </details>
+          ))}
+        </>
+      )
+    }
+  </div>
+
+  {
+    (nextConcept || prevConcept) && (
+      <footer class="panel-footer">
+        {prevConcept && (
+          <button
+            class="panel-prev"
+            type="button"
+            data-open-concept={prevConcept.id}
+          >
+            ← Anterior: {prevConcept.mapLabel.join(' ')}
+          </button>
+        )}
+        {nextConcept && (
+          <>
+            <p class="panel-footer-label">
+              Siguiente en el recorrido: <strong>{nextConcept.title}</strong>
+            </p>
+            <button
+              class="panel-next"
+              type="button"
+              data-open-concept={nextConcept.id}
+            >
+              Continuar el recorrido
+            </button>
+          </>
+        )}
+      </footer>
+    )
+  }
+</section>
