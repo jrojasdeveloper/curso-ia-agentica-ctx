@@ -8,6 +8,16 @@ A single-page Astro site that renders an interactive, video-game-style concept m
 2. `npm run dev` — local dev server
 3. `npm run build` — static output in `dist/`
 
+## Deploy
+
+Live site: <https://jrojasdeveloper.github.io/curso-ia-agentica-ctx/>
+
+Every push to `main` builds and deploys through `.github/workflows/deploy.yml` (GitHub Actions → GitHub Pages). The workflow runs `npm ci`, `npm run build`, and publishes `dist/` as the Pages artifact; no manual step is needed.
+
+GitHub Pages serves this project under `/curso-ia-agentica-ctx/`, so `astro.config.mjs` sets `base` only when `GITHUB_ACTIONS` is present. Local dev and local builds stay at `/`. To preview the production build locally, run `npm run build` and serve `dist/` from a static server.
+
+Pages must keep "Build and deployment → Source" set to **GitHub Actions**; the workflow's `deploy` job fails if the repository is switched back to branch-based publishing.
+
 ## Content: where to edit concepts
 
 All course content lives in `src/data/concepts.js`. It exports a `levels` map keyed by level id; each level owns its own `concepts`, `journeyOrder`, map hint, map aria-label and status line. Concept ids are unique across levels, so each id belongs to exactly one level. Each concept has:
